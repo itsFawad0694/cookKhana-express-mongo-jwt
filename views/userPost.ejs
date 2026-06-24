@@ -26,7 +26,14 @@
         <% if (recipes.length > 0) { %> <% recipes.forEach(item => { %>
 
         <div class="card">
+          <img
+                  src="/uploads/<%= item.image %>"
+                  alt="Recipe Image"
+                  style="width:200px;border-radius:10px;">
           <h2><%= item.title %></h2>
+          <h4><%= item.cookingTime %> Mins</h2>
+          <h4>Difficulty: <%= item.difficulty %></h2>
+          <h4>Category: <%= item.category %></h2>
 
           <div id="displaysteps"><%- item.detail %></div>
           <div id="usercardbtn">

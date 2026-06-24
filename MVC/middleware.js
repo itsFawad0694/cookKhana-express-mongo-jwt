@@ -26,9 +26,12 @@ const signupErr = async (req, res, next) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   // Check existing email
-  if (email && !emailRegex.test(email)) {
-    const existingUser = await User.findOne({ email: email });
-
+  if (!email || !emailRegex.test(email)) {
+    signuperrors.push("Enter a valid email!");
+  } else {
+  
+    const existingUser = await User.findOne({ email });
+  
     if (existingUser) {
       signuperrors.push("Email Already Exists!");
     }
@@ -49,7 +52,7 @@ const signupErr = async (req, res, next) => {
 
   // Render errors
   if (signuperrors.length > 0) {
-    console.log(signuperrors)
+    // console.log(signuperrors)
     return res.render("signup", {
       signupErrs: signuperrors,
     });
