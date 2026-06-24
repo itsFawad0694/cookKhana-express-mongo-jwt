@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="/style.css" />
     <link rel="shortcut icon" href="/image/fav.png" type="image/x-icon" />
   </head>
-
+  <%
+  const errorMsg = typeof error !== 'undefined'
+    ? error
+    : "No Data Available!";
+  %>
   <body>
     <nav>
       <div class="logo">
@@ -26,25 +30,34 @@
     </nav>
     <div class="container">
       <div class="box">
-        <% if(recipes.length > 0) { recipes.map(item=> { %>
-        <div class="card">
-          <img
-            src="/uploads/<%= item.image %>"
-            alt="Recipe Image"
-            style="width: 200px; border-radius: 10px"
-          />
-          <h2><%= item.author %></h2>
-          <h2><%= item.title %></h2>
-          <div id="displaysteps">
-            <h4><%= item.ingredients %></h4>
-          </div>
-          <a href="/recipeDetail/<%= item._id %>" class="allbtn">Read Detail</a>
-        </div>
+             
 
-        <% }) %> <% }else { %>
-        <h2><%= error %></h2>
+        <% if(recipes && recipes.length > 0) { %>
 
-        <% } %>
+            <% recipes.map(item => { %>
+          
+              <!-- card -->
+              <div class="card">
+                <img
+                  src="/uploads/<%= item.image %>"
+                  alt="Recipe Image"
+                  style="width: 200px; border-radius: 10px"
+                />
+                <h2><%= item.author %></h2>
+                <h2><%= item.title %></h2>
+                <div id="displaysteps">
+                  <h4><%= item.ingredients %></h4>
+                </div>
+                <a href="/recipeDetail/<%= item._id %>" class="allbtn">Read Detail</a>
+              </div>
+          
+            <% }) %>
+          
+          <% } else { %>
+          
+            <h2><%= errorMsg %></h2>
+          
+          <% } %>
       </div>
     </div>
   </body>

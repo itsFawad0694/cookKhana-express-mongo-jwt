@@ -196,11 +196,18 @@ app.get("/showallrecipes", auth, async (req, res) => {
     const recipes = await Recipe.find().sort({ createdAt: -1 }); //sort in decending order
     // res.send(data)
     // const {author,title,detail} = data
-    res.render("showallrecipe", { recipes: recipes ,
-      error: recipes.length === 0 ? "No Data Available!" : null,
-     });
-  } catch (error) {
-    res.render("showallrecipe", { error: error });
+    // res.render("showallrecipe", { recipes: recipes ,
+    //   error: recipes.length === 0 ? "No Data Available!" : null,
+    //  });
+    res.render("showallrecipe", {
+      recipes,
+      error: null
+    });
+  }catch(error){
+    res.render("showallrecipe", {
+      recipes: [],
+      error: error.message
+    });
   }
 });
 
