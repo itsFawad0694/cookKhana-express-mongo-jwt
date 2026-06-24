@@ -1,58 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CookKhana!</title>
-    <link rel="stylesheet" href="/style.css">
-    <link rel="shortcut icon" href="/image/fav.png" type="image/x-icon">
-</head>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="shortcut icon" href="/image/fav.png" type="image/x-icon" />
+  </head>
 
-
-<body>
+  <body>
     <nav>
-        <div class="logo">
-            <img src="/image/logo.png" alt="logo" class="logoIcon">
-            <h1>CookKhana</h1>
-          </div>
-        <ul>
-            <li><a href="/recipe">Add Recipe</a></li>|
-            <li><a href="/myrecipes">My post</a></li>|
-            <form action="/logout" method="POST">
-                <button type="submit" class="logoutbtn">Logout</button>
-            </form>
-        </ul>
+      <div class="logo">
+        <img src="/image/logo.png" alt="logo" class="logoIcon" />
+        <h1>CookKhana</h1>
+      </div>
+      <ul>
+        <li><a href="/recipe">Add Recipe</a></li>
+        |
+        <li><a href="/myrecipes">My post</a></li>
+        |
+        <form action="/logout" method="POST">
+          <button type="submit" class="logoutbtn">Logout</button>
+        </form>
+      </ul>
     </nav>
     <div class="container">
-        <div class="box">
-            <% if(recipes.length > 0) { recipes.map(item=> { %>
-                <div class="card">
-                <h2>
-                    <%= item.author %>
-                </h2>
-                <h2>
-                    <%= item.title %>
-                </h2>
-                <div id="displaysteps">
-                    <h4><%= item.ingredients %></h4>
-                </div>
-                 <a href="/recipeDetail/<%= item._id %>" class="allbtn">Read Detail</a>
+      <div class="box">
+        <% if(recipes.length > 0) { recipes.map(item=> { %>
+        <div class="card">
+          <img
+            src="/uploads/<%= item.image %>"
+            alt="Recipe Image"
+            style="width: 200px; border-radius: 10px"
+          />
+          <h2><%= item.author %></h2>
+          <h2><%= item.title %></h2>
+          <div id="displaysteps">
+            <h4><%= item.ingredients %></h4>
+          </div>
+          <a href="/recipeDetail/<%= item._id %>" class="allbtn">Read Detail</a>
         </div>
 
-                <% }) %>
+        <% }) %> <% }else { %>
+        <h2><%= error %></h2>
 
-
-
-
-                    <% }else { %>
-                        <h2>
-                            <%= error %>
-                        </h2>
-                       
-                        <% } %>
-
-        </div>
+        <% } %>
+      </div>
     </div>
-</body>
+  </body>
 </html>
