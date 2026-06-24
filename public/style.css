@@ -347,7 +347,11 @@ nav a:hover {
     height: 150px !important;
   }
 }
-
+#usercardbtn{
+  display: flex;
+  flex-direction: wrap;
+  gap: 5px;
+}
 .allbtn{
   text-decoration: none;
   list-style: none;

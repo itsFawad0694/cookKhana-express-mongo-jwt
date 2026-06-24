@@ -29,11 +29,12 @@
           <h2><%= item.title %></h2>
 
           <div id="displaysteps"><%- item.detail %></div>
-
+          <div id="usercardbtn">
           <form action="/postDelete/<%= item._id %>" method="POST">
-            <button type="submit">Delete</button>
+            <button type="submit" class="allbtn">Delete</button>
           </form>
-          <a href="/updatePost/<%= item._id %>">Update</a>
+          <a href="/updatePost/<%= item._id %>" class="allbtn">Update</a>
+        </div>
         </div>
 
         <% }) %> <% } else { %>
