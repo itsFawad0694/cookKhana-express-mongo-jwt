@@ -20,7 +20,7 @@
             <li><a href="/recipe">Add Recipe</a></li>|
             <li><a href="/myrecipes">My post</a></li>|
             <form action="/logout" method="POST">
-                <button type="submit">Logout</button>
+                <button type="submit" class="logoutbtn">Logout</button>
             </form>
         </ul>
     </nav>
@@ -37,7 +37,7 @@
                 <div id="displaysteps">
                     <%- item.detail %>
                 </div>
-                 <a href="/recipeDetail/<%= item._id %>">Read Detail</a>
+                 <a href="/recipeDetail/<%= item._id %>" class="allbtn">Read Detail</a>
         </div>
 
                 <% }) %>

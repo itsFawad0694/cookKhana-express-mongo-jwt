@@ -114,7 +114,7 @@ const loginErr = async (req, res, next) => {
 const My_Secret = process.env.JWT_SECRETKEY;
 //create jwt token
 const createToken = (id,username) => {
-  const maxAge = 2 * 60;
+  const maxAge = 5 * 60;
   return jwt.sign({ id,username }, My_Secret, {
     expiresIn: maxAge,
   });
@@ -173,26 +173,50 @@ const recipeError = (req, res, next) => {
 
   let recipeErrors = [];
 
-  const { title, steps } = req.body;
+  const {
+      title,
+      steps,
+      ingredients,
+      cookingTime,
+      category,
+      difficulty
+  } = req.body;
 
+  // Title
   if (!title || !title.trim()) {
-    recipeErrors.push("Enter Title!");
+      recipeErrors.push("Enter Title!");
   }
 
+  // Details
   if (!steps || steps.trim() === "" || steps === "<p><br></p>") {
-    recipeErrors.push("Enter Steps!");
+      recipeErrors.push("Enter Recipe Details!");
+  }
+
+  // Ingredients
+  if (!ingredients || !ingredients.trim()) {
+      recipeErrors.push("Enter Ingredients!");
+  }
+
+  // Cooking Time
+  if (!cookingTime || Number(cookingTime) <= 0) {
+      recipeErrors.push("Enter Valid Cooking Time!");
+  }
+
+  // Category
+  if (!category) {
+      recipeErrors.push("Select Category!");
+  }
+
+  // Difficulty
+  if (!difficulty) {
+      recipeErrors.push("Select Difficulty!");
   }
 
   if (recipeErrors.length > 0) {
-
-    req.recipeErrors = recipeErrors;
-
-    return next();
-
+      req.recipeErrors = recipeErrors;
   }
 
   next();
-
 };
 module.exports = {
   signupErr,

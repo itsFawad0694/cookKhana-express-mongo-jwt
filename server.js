@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config(); //this wil allow to use process.env anywhere in the server
 const app = express();
 const PORT = process.env.PORT || 8000;
+const multer = require("multer");  //to handle image files
 const path = require("path");
 const mongoose = require("mongoose");
 const { connectDB } = require("./MVC/model/db");
@@ -24,6 +25,49 @@ app.use(express.json()); //use to make sure json is handle
 app.use(express.urlencoded({ extended: true }));
 //use this middleware to allow relavent path
 app.use(express.static("public"));
+//middleware for images
+app.use("/uploads", express.static("uploads"));
+
+
+//handle images  [//handle image () by storing it in disk]
+const storage = multer.diskStorage({
+
+  destination: (req, file, cb) => {
+      cb(null, "uploads/");
+  },
+
+  filename: (req, file, cb) => {
+      cb(
+          null,
+          Date.now() + path.extname(file.originalname)
+      );
+  }
+
+});
+
+//validation to only allow image no exe or other file
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+
+      const allowed = [
+          "image/jpeg",
+          "image/jpg",
+          "image/png",
+          "image/webp"
+      ];
+
+      if (allowed.includes(file.mimetype)) {
+          cb(null, true);
+      } else {
+          cb(new Error("Only images are allowed"));
+      }
+
+  }
+});
+
+
+
 //to make sure we dont get undefine jwt token error and instead redirect to login if not login
 app.use(cookieParser());
 
@@ -97,7 +141,7 @@ app.post("/login", loginErr, async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email: email });
   const token = createToken(user._id, user.username);
-  const maxAge = 2 * 60;
+  const maxAge = 5 * 60;
   res.cookie("jwt", token, {
     httpOnly: true,
     maxAge: maxAge * 1000,
@@ -111,8 +155,9 @@ app.get("/recipe", auth, async (req, res) => {
   res.render("postrecipes");
 });
 
+
 //add recipe
-app.post("/recipe", auth, recipeError, async (req, res) => {
+app.post("/recipe", auth,upload.single("image"), recipeError, async (req, res) => {
   if (req.recipeErrors) {
     return res.render("postrecipes", {
       recipeErr: req.recipeErrors,
@@ -120,16 +165,27 @@ app.post("/recipe", auth, recipeError, async (req, res) => {
     });
   }
 
-  const { title, steps } = req.body;
+  const { title, steps,cookingTime,category,difficulty } = req.body;
+
+  const ingredients = req.body.ingredients
+  .split("\n")
+  .map(item => item.trim())
+  .filter(item => item !== "");
+
   const recipe = new Recipe({
     userId: req.user.id,
     author: req.user.username.toUpperCase(),
     title: title,
     detail: steps,
+    ingredients,
+    cookingTime: cookingTime,
+    category:category,
+    difficulty: difficulty,
+    image: req.file?.filename
   });
 
   const result = await recipe.save();
-
+  // console.log(result)
   res.redirect("/showallrecipes");
 });
 
@@ -197,35 +253,62 @@ app.get("/updatePost/:id", auth, async (req, res) => {
 });
 
 //update post
-app.post("/updatePost/:id", auth, recipeError, async (req, res) => {
-  // validation failed
-  if (req.recipeErrors) {
-    return res.render("updateRecipe", {
-      recipe: {
-        _id: req.params.id,
-        title: req.body.title,
-        detail: req.body.steps,
-      },
+app.post(
+  "/updatePost/:id",
+  auth,
+  upload.single("image"),
+  recipeError,
+  async (req, res) => {
 
-      recipeErr: req.recipeErrors,
-    });
-  }
+    if (req.recipeErrors) {
 
-  // update recipe
-  await Recipe.findOneAndUpdate(
-    {
-      _id: req.params.id,
-      userId: req.user.id,
-    },
-    {
+      return res.render("updateRecipe", {
+        recipe: {
+          _id: req.params.id,
+          title: req.body.title,
+          detail: req.body.steps,
+          ingredients: req.body.ingredients,
+          cookingTime: req.body.cookingTime,
+          category: req.body.category,
+          difficulty: req.body.difficulty
+        },
+        recipeErr: req.recipeErrors,
+      });
+
+    }
+
+    const ingredients = req.body.ingredients
+      ? req.body.ingredients
+          .split("\n")
+          .map(item => item.trim())
+          .filter(item => item)
+      : [];
+
+    const updateData = {
       title: req.body.title,
       detail: req.body.steps,
+      ingredients,
+      cookingTime: req.body.cookingTime,
+      category: req.body.category,
+      difficulty: req.body.difficulty
+    };
+
+    // Update image only if a new one was uploaded
+    if (req.file) {
+      updateData.image = req.file.filename;
     }
-  );
 
-  res.redirect("/myrecipes");
-});
+    await Recipe.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        userId: req.user.id
+      },
+      updateData
+    );
 
+    res.redirect("/myrecipes");
+  }
+);
 //read detail
 app.get("/recipeDetail/:id", auth, async (req, res) => {
 

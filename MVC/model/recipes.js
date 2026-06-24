@@ -5,31 +5,47 @@ const { Schema } = mongoose;
 const recipeSchema = new Schema({
 
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     },
-
+  
     author: {
-        type: String,
-        required: true,
-        trim: true
-
-        
+      type: String,
+      required: true
     },
-
+  
     title: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true
     },
-
+  
     detail: {
-        type: String,
-        trim: true
+      type: String
+    },
+  
+    ingredients: [{
+      type: String
+    }],
+  
+    cookingTime: {
+      type: Number
+    },
+  
+    difficulty: {
+      type: String,
+      enum: ["Easy", "Medium", "Hard"]
+    },
+  
+    category: {
+      type: String
+    },
+  
+    image: {
+      type: String
     }
-
-}, { timestamps: true });
+  
+  }, { timestamps: true });
 //make model of scheme
 const Recipe = mongoose.model('recipe',recipeSchema)
 

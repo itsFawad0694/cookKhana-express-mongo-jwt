@@ -18,7 +18,7 @@
         <ul>
             <li><a href="/">Home</a></li> |
             <form action="/logout" method="POST">
-                <button type="submit">Logout</button>
+              <button type="submit" class="logoutbtn">Logout</button>
             </form>
         </ul>
       </nav>
@@ -42,15 +42,64 @@
         <% }%>
       </div> -->
     <div class="form">
-      <form action="/recipe" method="POST" id="recipeForm" class="formcss">
-            <label for="">Title</label>
-            <input type="text" name="title" placeholder="Enter Title!">
-            <label for="">Details</label>
-            <div id="editor" style="height:200px;"></div>
-            <input type="hidden" name="steps" id="steps">
-                
-            <button type="submit" class="button">Post</button>
-        </form>
+      <form action="/recipe" 
+      method="POST" 
+      enctype="multipart/form-data"
+      id="recipeForm" 
+      class="formcss">
+
+    <!-- Title -->
+    <label for="title">Title</label>
+    <input type="text" name="title" id="title" placeholder="Enter Recipe Title">
+
+    <!-- Image -->
+    <label for="image">Recipe Image</label>
+    <input type="file" name="image" id="image" accept="image/*">
+
+    <!-- Ingredients -->
+    <label for="ingredients">Ingredients</label>
+    <textarea
+        name="ingredients"
+        id="ingredients"
+        rows="4"
+        placeholder="Enter one ingredient per line&#10;2 Eggs&#10;1 Onion&#10;1 tsp Salt"></textarea>
+
+    <!-- Cooking Time -->
+    <label for="cookingTime">Cooking Time (Minutes)</label>
+    <input type="number"
+           name="cookingTime"
+           id="cookingTime"
+           min="1"
+           placeholder="30">
+
+    <!-- Category -->
+    <label for="category">Category</label>
+    <select name="category" id="category">
+        <option value="">Select Category</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Lunch">Lunch</option>
+        <option value="Dinner">Dinner</option>
+        <option value="Dessert">Dessert</option>
+        <option value="Snack">Snack</option>
+    </select>
+
+    <!-- Difficulty -->
+    <label for="difficulty">Difficulty</label>
+    <select name="difficulty" id="difficulty">
+        <option value="">Select Difficulty</option>
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+    </select>
+
+    <!-- Details -->
+    <label for="">Details</label>
+    <div id="editor" style="height:200px;"></div>
+    <input type="hidden" name="steps" id="steps">
+
+    <button type="submit" class="button">Post Recipe</button>
+
+</form>
         <div id="displaysteps"></div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
