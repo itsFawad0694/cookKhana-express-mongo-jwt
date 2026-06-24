@@ -7,11 +7,7 @@
     <link rel="stylesheet" href="/style.css" />
     <link rel="shortcut icon" href="/image/fav.png" type="image/x-icon" />
   </head>
-  <%
-  const errorMsg = typeof error !== 'undefined'
-    ? error
-    : "No Data Available!";
-  %>
+ 
   <body>
     <nav>
       <div class="logo">
@@ -30,7 +26,11 @@
     </nav>
     <div class="container">
       <div class="box">
-             
+        <%
+        const errorMsg = typeof error !== 'undefined'
+          ? error
+          : "No Data Available!";
+        %>  
 
         <% if(recipes && recipes.length > 0) { %>
 
